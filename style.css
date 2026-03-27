@@ -255,6 +255,45 @@ body {
   text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
 }
 
+/* ===== COLLAGE BACKGROUND (page 3) ===== */
+.collage-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0;
+}
+
+.collage-cell {
+  overflow: hidden;
+  position: relative;
+}
+
+.collage-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.collage-tl { grid-area: 1 / 1 / 2 / 2; }
+.collage-tr { grid-area: 1 / 2 / 2 / 3; }
+.collage-bl { grid-area: 2 / 1 / 3 / 2; }
+.collage-br { grid-area: 2 / 2 / 3 / 3; }
+
+.collage-bg .slide-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.slide-collage .slide-content {
+  z-index: 3;
+}
+
 /* ===== ROOMS ===== */
 .slide-room .slide-content {
   max-width: 900px;

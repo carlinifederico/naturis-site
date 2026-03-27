@@ -7,12 +7,13 @@
   const audioToggle = document.getElementById('audio-toggle');
   const volumeSlider = document.getElementById('volume-slider');
 
+  // ===== Audio Setup =====
+  const FADE_MS = 800;
+  let audioEnabled = true; // ON by default
+  let currentVolume = 0.7;
   let currentSlide = 0;
-  let audioEnabled = false;
-  let ambientController = null;
-  let roomControllers = {};
-  let currentVolume = 70; // 0-100
-  let activeSource = null; // 'ambient' | room index
+  let activeAudio = null;
+  let userInteracted = false;
 
   const SVG_OFF =
     '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>' +
@@ -23,6 +24,129 @@
     '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>' +
     '<path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>' +
     '<path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+
+  // Map slide indices to audio elements
+  const audioAmbient = document.getElementById('audio-ambient');
+  const roomAudioMap = {
+    5: document.getElementById('audio-room-1'),
+    6: document.getElementById('audio-room-2'),
+    7: document.getElementById('audio-room-3'),
+    8: document.getElementById('audio-room-4'),
+    9: document.getElementById('audio-room-5'),
+    10: document.getElementById('audio-room-6'),
+  };
+
+  const allAudios = [audioAmbient, ...Object.values(roomAudioMap)];
+
+  // Set initial volume on all audio elements
+  allAudios.forEach((a) => { a.volume = 0; });
+
+  // Show active state by default
+  audioControls.classList.add('active');
+
+  // ===== Crossfade =====
+  function fadeOut(audio, duration) {
+    if (!audio || audio.paused) return Promise.resolve();
+    const startVol = audio.volume;
+    const steps = 20;
+    const stepTime = duration / steps;
+    const volStep = startVol / steps;
+    return new Promise((resolve) => {
+      let step = 0;
+      const interval = setInterval(() => {
+        step++;
+        audio.volume = Math.max(0, startVol - volStep * step);
+        if (step >= steps) {
+          clearInterval(interval);
+          audio.pause();
+          audio.volume = 0;
+          resolve();
+        }
+      }, stepTime);
+    });
+  }
+
+  function fadeIn(audio, targetVol, duration) {
+    if (!audio) return;
+    audio.volume = 0;
+    audio.play().catch(() => {});
+    const steps = 20;
+    const stepTime = duration / steps;
+    const volStep = targetVol / steps;
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      audio.volume = Math.min(targetVol, volStep * step);
+      if (step >= steps) {
+        clearInterval(interval);
+        audio.volume = targetVol;
+      }
+    }, stepTime);
+  }
+
+  // ===== Play correct track for slide =====
+  function playForSlide(slideIndex) {
+    if (!audioEnabled || !userInteracted) return;
+
+    const targetAudio = roomAudioMap[slideIndex] || audioAmbient;
+
+    if (targetAudio === activeAudio) return;
+
+    // Fade out current
+    if (activeAudio && !activeAudio.paused) {
+      fadeOut(activeAudio, FADE_MS);
+    }
+
+    // Fade in new
+    fadeIn(targetAudio, currentVolume, FADE_MS);
+    activeAudio = targetAudio;
+  }
+
+  function stopAll() {
+    allAudios.forEach((a) => {
+      a.pause();
+      a.volume = 0;
+    });
+    activeAudio = null;
+  }
+
+  // ===== Start audio on first user interaction =====
+  function onFirstInteraction() {
+    if (userInteracted) return;
+    userInteracted = true;
+    if (audioEnabled) {
+      playForSlide(currentSlide);
+    }
+    document.removeEventListener('click', onFirstInteraction);
+    document.removeEventListener('keydown', onFirstInteraction);
+    document.removeEventListener('scroll', onFirstInteraction, true);
+  }
+  document.addEventListener('click', onFirstInteraction);
+  document.addEventListener('keydown', onFirstInteraction);
+  document.addEventListener('scroll', onFirstInteraction, true);
+
+  // ===== Audio Toggle =====
+  audioToggle.addEventListener('click', () => {
+    audioEnabled = !audioEnabled;
+
+    if (audioEnabled) {
+      audioToggle.querySelector('svg').innerHTML = SVG_ON;
+      audioControls.classList.add('active');
+      playForSlide(currentSlide);
+    } else {
+      audioToggle.querySelector('svg').innerHTML = SVG_OFF;
+      audioControls.classList.remove('active');
+      stopAll();
+    }
+  });
+
+  // ===== Volume Slider =====
+  volumeSlider.addEventListener('input', () => {
+    currentVolume = parseInt(volumeSlider.value, 10) / 100;
+    if (activeAudio && !activeAudio.paused) {
+      activeAudio.volume = currentVolume;
+    }
+  });
 
   // ===== Intersection Observer: Animations =====
   const animObserver = new IntersectionObserver(
@@ -44,7 +168,7 @@
           if (index !== currentSlide) {
             currentSlide = index;
             updateDots(index);
-            handleAudio(index);
+            playForSlide(index);
           }
         }
       });
@@ -77,125 +201,6 @@
       slides[Math.max(currentSlide - 1, 0)].scrollIntoView({ behavior: 'smooth' });
     }
   });
-
-  // ===== Audio Toggle =====
-  audioToggle.addEventListener('click', () => {
-    audioEnabled = !audioEnabled;
-
-    if (audioEnabled) {
-      audioToggle.querySelector('svg').innerHTML = SVG_ON;
-      audioControls.classList.add('active');
-      handleAudio(currentSlide);
-    } else {
-      audioToggle.querySelector('svg').innerHTML = SVG_OFF;
-      audioControls.classList.remove('active');
-      pauseAll();
-      activeSource = null;
-    }
-  });
-
-  // ===== Volume =====
-  volumeSlider.addEventListener('input', () => {
-    currentVolume = parseInt(volumeSlider.value, 10);
-    // Spotify IFrame API doesn't expose volume control directly,
-    // so we control the iframe element's volume via postMessage workaround.
-    // For now the slider controls a CSS visual state — actual volume
-    // is handled at the Spotify player level by the user.
-    // If volume is 0, mute by pausing.
-    if (currentVolume === 0 && audioEnabled) {
-      pauseAll();
-    } else if (currentVolume > 0 && audioEnabled) {
-      handleAudio(currentSlide);
-    }
-  });
-
-  // ===== Collect room slides =====
-  const roomSlides = {};
-  document.querySelectorAll('.slide-room').forEach((slide) => {
-    const index = parseInt(slide.dataset.index, 10);
-    const trackId = slide.dataset.spotifyTrack;
-    if (trackId) {
-      roomSlides[index] = {
-        trackId: trackId,
-        embedId: slide.querySelector('.spotify-embed')?.id,
-        controller: null
-      };
-    }
-  });
-
-  // ===== Spotify IFrame API =====
-  window.onSpotifyIframeApiReady = (IFrameAPI) => {
-    // Create ambient player
-    const ambientEl = document.getElementById('spotify-ambient');
-    const ambientTrack = ambientEl?.dataset.spotifyTrack;
-    if (ambientEl && ambientTrack) {
-      IFrameAPI.createController(ambientEl, {
-        uri: 'spotify:track:' + ambientTrack,
-        width: 300,
-        height: 80,
-        theme: 'dark'
-      }, (controller) => {
-        ambientController = controller;
-        controller.addListener('ready', () => {
-          controller.pause();
-        });
-      });
-    }
-
-    // Create room players
-    Object.entries(roomSlides).forEach(([index, room]) => {
-      if (!room.trackId || !room.embedId) return;
-      const element = document.getElementById(room.embedId);
-      if (!element) return;
-
-      IFrameAPI.createController(element, {
-        uri: 'spotify:track:' + room.trackId,
-        width: 300,
-        height: 80,
-        theme: 'dark'
-      }, (controller) => {
-        room.controller = controller;
-        roomControllers[index] = controller;
-        controller.addListener('ready', () => {
-          controller.pause();
-        });
-      });
-    });
-  };
-
-  // ===== Audio Logic =====
-  function pauseAll() {
-    if (ambientController) {
-      try { ambientController.pause(); } catch (e) {}
-    }
-    Object.values(roomControllers).forEach((ctrl) => {
-      try { ctrl.pause(); } catch (e) {}
-    });
-  }
-
-  function handleAudio(slideIndex) {
-    if (!audioEnabled || currentVolume === 0) return;
-
-    const isRoom = roomSlides[slideIndex] && roomSlides[slideIndex].controller;
-
-    if (isRoom) {
-      // On a room slide — play room track, pause ambient
-      if (activeSource !== slideIndex) {
-        pauseAll();
-        try { roomSlides[slideIndex].controller.resume(); } catch (e) {}
-        activeSource = slideIndex;
-      }
-    } else {
-      // On a non-room slide — play ambient, pause rooms
-      if (activeSource !== 'ambient') {
-        pauseAll();
-        if (ambientController) {
-          try { ambientController.resume(); } catch (e) {}
-        }
-        activeSource = 'ambient';
-      }
-    }
-  }
 
   // ===== Video Support =====
   document.querySelectorAll('.room-video[data-video-src]').forEach((videoWrap) => {

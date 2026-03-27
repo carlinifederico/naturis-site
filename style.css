@@ -312,15 +312,6 @@ body {
   display: block;
 }
 
-/* Room Audio — hidden Spotify embed (audio only, no UI) */
-.room-audio {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0;
-}
 
 /* Room Video — future video container */
 .room-video {
@@ -375,15 +366,6 @@ body {
 }
 
 /* ===== AUDIO CONTROLS ===== */
-.spotify-hidden {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0;
-}
-
 .audio-controls {
   position: fixed;
   bottom: 2rem;

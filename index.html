@@ -16,17 +16,21 @@
     <button class="audio-toggle" id="audio-toggle" aria-label="Toggle audio">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-        <line x1="23" y1="9" x2="17" y2="15"></line>
-        <line x1="17" y1="9" x2="23" y2="15"></line>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
       </svg>
     </button>
     <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="70" aria-label="Volume">
   </div>
 
-  <!-- Hidden ambient player -->
-  <div class="spotify-hidden">
-    <div id="spotify-ambient" data-spotify-track="2pP6DpfFxbOzvlxrpjH09v"></div>
-  </div>
+  <!-- Audio elements (hidden, native HTML5 for volume control) -->
+  <audio id="audio-ambient" src="https://p.scdn.co/mp3-preview/40960493580f6d91596ed609b909dc7516a66f16" loop preload="auto"></audio>
+  <audio id="audio-room-1" src="https://p.scdn.co/mp3-preview/37bbe3527864113a5c952a31ecdd7eff42978961" loop preload="auto"></audio>
+  <audio id="audio-room-2" src="https://p.scdn.co/mp3-preview/9c0e373d9fee094fff15ff53f96577d0b17842c0" loop preload="auto"></audio>
+  <audio id="audio-room-3" src="https://p.scdn.co/mp3-preview/c9479f39092e32ff1d38e5d08bbabc3a38db1e88" loop preload="auto"></audio>
+  <audio id="audio-room-4" src="https://p.scdn.co/mp3-preview/2e4e525eebb61c792ccc73ec85e204af4a2185dd" loop preload="auto"></audio>
+  <audio id="audio-room-5" src="https://p.scdn.co/mp3-preview/7b1c6b9ab81e3a4e2dc78b74f022f4b161c7fd7c" loop preload="auto"></audio>
+  <audio id="audio-room-6" src="https://p.scdn.co/mp3-preview/f1e80df6b34884b338d2faf4369bc3a0b501658f" loop preload="auto"></audio>
 
   <!-- Navigation Dots -->
   <nav class="dots" aria-label="Section navigation">
@@ -124,9 +128,6 @@
           <div class="room-thumb-wrap"><img src="assets/room1/thumb1.png" alt="Dark particle walls" class="room-thumb"></div>
           <div class="room-thumb-wrap"><img src="assets/room1/thumb2.png" alt="Vertical particle panels" class="room-thumb"></div>
         </div>
-        <div class="room-audio">
-          <div class="spotify-embed" id="spotify-room-1"></div>
-        </div>
         <div class="room-video" data-video-src="">
           <video muted loop playsinline></video>
         </div>
@@ -146,9 +147,6 @@
           <div class="room-thumb-wrap"><img src="assets/room2/thumb1.png" alt="Mirrored forest" class="room-thumb"></div>
           <div class="room-thumb-wrap"><img src="assets/room2/thumb2.png" alt="Forest canopy projection" class="room-thumb"></div>
           <div class="room-thumb-wrap"><img src="assets/room2/thumb3.png" alt="Root ceiling installation" class="room-thumb"></div>
-        </div>
-        <div class="room-audio">
-          <div class="spotify-embed" id="spotify-room-2"></div>
         </div>
         <div class="room-video" data-video-src="">
           <video muted loop playsinline></video>
@@ -170,9 +168,6 @@
           <div class="room-thumb-wrap"><img src="assets/room3/thumb2.png" alt="Aerial coastline kayaks" class="room-thumb"></div>
           <div class="room-thumb-wrap"><img src="assets/room3/thumb3.png" alt="Aerial greenhouses" class="room-thumb"></div>
         </div>
-        <div class="room-audio">
-          <div class="spotify-embed" id="spotify-room-3"></div>
-        </div>
         <div class="room-video" data-video-src="">
           <video muted loop playsinline></video>
         </div>
@@ -191,9 +186,6 @@
         <div class="room-gallery">
           <div class="room-thumb-wrap"><img src="assets/room4-thumb1.png" alt="Data visualization trees" class="room-thumb"></div>
           <div class="room-thumb-wrap"><img src="assets/room4-thumb2.png" alt="Bioluminescent forest" class="room-thumb"></div>
-        </div>
-        <div class="room-audio">
-          <div class="spotify-embed" id="spotify-room-4"></div>
         </div>
         <div class="room-video" data-video-src="">
           <video muted loop playsinline></video>
@@ -214,9 +206,6 @@
           <div class="room-thumb-wrap"><img src="assets/room5-thumb1.png" alt="Crystal flower closeup" class="room-thumb"></div>
           <div class="room-thumb-wrap"><img src="assets/room5-thumb2.png" alt="Organic warm macro" class="room-thumb"></div>
         </div>
-        <div class="room-audio">
-          <div class="spotify-embed" id="spotify-room-5"></div>
-        </div>
         <div class="room-video" data-video-src="">
           <video muted loop playsinline></video>
         </div>
@@ -235,9 +224,6 @@
         <div class="room-gallery">
           <div class="room-thumb-wrap"><img src="assets/room6-thumb1.png" alt="Particle jellyfish" class="room-thumb"></div>
           <div class="room-thumb-wrap"><img src="assets/room6-thumb2.png" alt="Particle snail" class="room-thumb"></div>
-        </div>
-        <div class="room-audio">
-          <div class="spotify-embed" id="spotify-room-6"></div>
         </div>
         <div class="room-video" data-video-src="">
           <video muted loop playsinline></video>
@@ -260,8 +246,6 @@
 
   </main>
 
-  <!-- Spotify IFrame API -->
-  <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
   <script src="script.js"></script>
 </body>
 </html>

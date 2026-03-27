@@ -381,7 +381,6 @@ body {
   width: 28px;
   height: 28px;
   opacity: 0.8;
-  filter: invert(1);
 }
 
 .room-info-tag {

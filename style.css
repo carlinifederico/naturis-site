@@ -183,35 +183,35 @@ body {
 }
 
 .cover-logo {
-  width: 280px;
-  max-width: 60vw;
+  width: 340px;
+  max-width: 65vw;
   opacity: 0.95;
   /* Logo is white on white bg — invert or use mix-blend-mode if needed */
   filter: brightness(1);
 }
 
 .cover-tagline {
-  font-size: clamp(0.75rem, 1.4vw, 1rem);
-  font-weight: 200;
-  letter-spacing: 0.25em;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 .cover-subtitle {
-  font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
   font-weight: 300;
   line-height: 1.8;
-  max-width: 560px;
-  opacity: 0.5;
+  max-width: 600px;
+  opacity: 0.7;
 }
 
 .cover-credits {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  opacity: 0.35;
+  opacity: 0.45;
   margin-top: 1rem;
 }
 
@@ -221,17 +221,17 @@ body {
 }
 
 .concept-body p {
-  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
   line-height: 1.9;
   font-weight: 300;
-  opacity: 0.75;
+  opacity: 0.8;
   margin-bottom: 1.25rem;
 }
 
 .concept-quote {
   margin-top: 2.5rem;
-  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
-  font-weight: 200;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  font-weight: 300;
   font-style: italic;
   line-height: 1.7;
   color: var(--accent);
@@ -246,13 +246,13 @@ body {
 }
 
 .statement-text {
-  font-size: clamp(1.3rem, 3vw, 2.4rem);
-  font-weight: 200;
-  line-height: 1.5;
+  font-size: clamp(1.6rem, 3.5vw, 3rem);
+  font-weight: 300;
+  line-height: 1.45;
   letter-spacing: -0.01em;
-  max-width: 700px;
+  max-width: 750px;
   margin: 0 auto;
-  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* ===== ROOMS ===== */
@@ -264,20 +264,21 @@ body {
 }
 
 .room-label {
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  opacity: 0.4;
-  margin-bottom: 0.5rem;
+  opacity: 0.5;
+  margin-bottom: 0.75rem;
 }
 
 .room-title {
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
-  font-weight: 200;
-  line-height: 1.3;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.25;
   margin-bottom: 2rem;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
 }
 
 /* Room Gallery — small foreground images */
@@ -348,27 +349,27 @@ body {
 }
 
 .closing-label {
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  opacity: 0.35;
+  opacity: 0.45;
 }
 
 .closing-text {
-  font-size: clamp(1rem, 2vw, 1.4rem);
-  font-weight: 200;
-  line-height: 1.8;
-  opacity: 0.85;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-weight: 300;
+  line-height: 1.7;
+  opacity: 0.9;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
 }
 
 .closing-credits {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 400;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  opacity: 0.3;
+  opacity: 0.4;
   margin-top: 2rem;
 }
 

@@ -264,12 +264,13 @@ body {
 }
 
 .room-label {
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.3em;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
-  opacity: 0.5;
+  opacity: 0.8;
   margin-bottom: 0.75rem;
+  text-shadow: 0 1px 20px rgba(0, 0, 0, 0.5);
 }
 
 .room-title {

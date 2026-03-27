@@ -310,26 +310,14 @@ body {
   display: block;
 }
 
-/* Room Audio — Spotify embed */
+/* Room Audio — hidden Spotify embed (audio only, no UI) */
 .room-audio {
-  width: 100%;
-  max-width: 340px;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-
-.room-audio:hover {
-  opacity: 1;
-}
-
-/* Spotify embed container */
-.spotify-embed {
-  border-radius: 12px;
+  position: absolute;
+  width: 0;
+  height: 0;
   overflow: hidden;
-}
-
-.spotify-embed iframe {
-  border-radius: 12px !important;
+  pointer-events: none;
+  opacity: 0;
 }
 
 /* Room Video — future video container */
@@ -426,6 +414,16 @@ body {
   opacity: 0;
   pointer-events: none;
   transform: translateY(10px);
+}
+
+.audio-enable.playing {
+  border-color: var(--accent);
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+.audio-enable.playing:hover {
+  opacity: 0.9;
 }
 
 .audio-enable svg {

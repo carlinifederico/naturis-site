@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NATURIS — Technology is nature too</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Audio Enable Prompt -->
+  <button class="audio-enable" id="audio-enable" aria-label="Enable audio">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line>
+      <line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>
+    <span>Enable Audio</span>
+  </button>
+
+  <!-- Navigation Dots -->
+  <nav class="dots" aria-label="Section navigation">
+    <button class="dot active" data-slide="0" aria-label="Cover"></button>
+    <button class="dot" data-slide="1" aria-label="Concept"></button>
+    <button class="dot" data-slide="2" aria-label="Statement 1"></button>
+    <button class="dot" data-slide="3" aria-label="Statement 2"></button>
+    <button class="dot" data-slide="4" aria-label="Statement 3"></button>
+    <button class="dot" data-slide="5" aria-label="Room 1"></button>
+    <button class="dot" data-slide="6" aria-label="Room 2"></button>
+    <button class="dot" data-slide="7" aria-label="Room 3"></button>
+    <button class="dot" data-slide="8" aria-label="Room 4"></button>
+    <button class="dot" data-slide="9" aria-label="Room 5"></button>
+    <button class="dot" data-slide="10" aria-label="Room 6"></button>
+    <button class="dot" data-slide="11" aria-label="Closing"></button>
+  </nav>
+
+  <!-- Scroll Container -->
+  <main class="scroll-container">
+
+    <!-- SECTION 1 — COVER -->
+    <section class="slide slide-cover" data-index="0">
+      <div class="slide-bg">
+        <img src="assets/cover.jpg" alt="Immersive colorful room">
+        <div class="slide-bg-overlay slide-bg-overlay--dark"></div>
+      </div>
+      <div class="slide-content anim">
+        <img src="assets/logo.jpg" alt="NATURIS" class="cover-logo">
+        <p class="cover-tagline">"Technology is nature too..."</p>
+        <p class="cover-subtitle">A live immersive experience where code and ecosystem merge into a single pulse. NATURIS invites us to reconnect the human, the digital, and the organic in one continuous flow of balance and evolution.</p>
+        <p class="cover-credits">by Jorge Tereso, Federico Carlini and Fernando Maldonado</p>
+      </div>
+    </section>
+
+    <!-- SECTION 2 — CONCEPT -->
+    <section class="slide slide-concept" data-index="1">
+      <div class="slide-bg">
+        <img src="assets/concept-bg.png" alt="Silhouette looking up at organic light">
+        <div class="slide-bg-overlay slide-bg-overlay--heavy"></div>
+      </div>
+      <div class="slide-content anim">
+        <div class="concept-body">
+          <p>NATURIS imagines a world where technology is not outside of nature, but another way it grows. Like roots, rivers, or lungs, digital systems expand and branch, forming patterns of life.</p>
+          <p>For centuries they were used to extract and destroy, but as they become more intelligent, they also become more careful, sustainable, and organic.</p>
+          <p>This project stands beyond good or bad: it does not resist or celebrate, but invites us to see the union. What begins as turbulence becomes rhythm and balance, until it is clear there are not two worlds, but one continuous flow.</p>
+          <p>NATURIS is an invitation to reconnect, to evolve technology so it can live as part of nature.</p>
+        </div>
+        <blockquote class="concept-quote">"Technology is nature too, growing with the same pulse as roots, rivers, and lungs."</blockquote>
+      </div>
+    </section>
+
+    <!-- SECTION 3 — STATEMENT 1 -->
+    <section class="slide slide-statement" data-index="2">
+      <div class="slide-bg">
+        <img src="assets/statement1-bg.png" alt="Tech head with flowing organic wires">
+        <div class="slide-bg-overlay slide-bg-overlay--medium"></div>
+      </div>
+      <div class="slide-content anim">
+        <h2 class="statement-text">"At first, the encounter is turbulent, overflowing with raw, unstable energy."</h2>
+      </div>
+    </section>
+
+    <!-- SECTION 4 — STATEMENT 2 -->
+    <section class="slide slide-statement" data-index="3">
+      <div class="slide-bg">
+        <img src="assets/statement2-bg.png" alt="Moss and copper wires merging">
+        <div class="slide-bg-overlay slide-bg-overlay--medium"></div>
+      </div>
+      <div class="slide-content anim">
+        <h2 class="statement-text">"Code is not separate from nature, it is another way life organizes itself."</h2>
+      </div>
+    </section>
+
+    <!-- SECTION 5 — STATEMENT 3 -->
+    <section class="slide slide-statement" data-index="4">
+      <div class="slide-bg">
+        <img src="assets/statement3-bg.png" alt="Flowing gold and blue ocean patterns">
+        <div class="slide-bg-overlay slide-bg-overlay--medium"></div>
+      </div>
+      <div class="slide-content anim">
+        <h2 class="statement-text">"Out of this storm comes rhythm, balance, and a strange sense of harmony."</h2>
+      </div>
+    </section>
+
+    <!-- SECTION 6 — ROOM 1 -->
+    <section class="slide slide-room" data-index="5" data-spotify-track="184sAnVJzO52kwCWfytpnz">
+      <div class="slide-bg">
+        <img src="assets/room1/bg.png" alt="Particle room immersive experience">
+        <div class="slide-bg-overlay slide-bg-overlay--room"></div>
+      </div>
+      <div class="slide-content anim">
+        <span class="room-label">Room 1</span>
+        <h2 class="room-title">"All is connected"</h2>
+        <div class="room-gallery">
+          <div class="room-thumb-wrap"><img src="assets/room1/thumb1.png" alt="Dark particle walls" class="room-thumb"></div>
+          <div class="room-thumb-wrap"><img src="assets/room1/thumb2.png" alt="Vertical particle panels" class="room-thumb"></div>
+        </div>
+        <div class="room-audio">
+          <div class="spotify-embed" id="spotify-room-1"></div>
+        </div>
+        <div class="room-video" data-video-src="">
+          <video muted loop playsinline></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7 — ROOM 2 -->
+    <section class="slide slide-room" data-index="6" data-spotify-track="2H4mS3Yd74WCMupnofmjv1">
+      <div class="slide-bg">
+        <img src="assets/room2/bg.png" alt="Forest projection room">
+        <div class="slide-bg-overlay slide-bg-overlay--room"></div>
+      </div>
+      <div class="slide-content anim">
+        <span class="room-label">Room 2</span>
+        <h2 class="room-title">"Let go and fall"</h2>
+        <div class="room-gallery">
+          <div class="room-thumb-wrap"><img src="assets/room2/thumb1.png" alt="Mirrored forest" class="room-thumb"></div>
+          <div class="room-thumb-wrap"><img src="assets/room2/thumb2.png" alt="Forest canopy projection" class="room-thumb"></div>
+          <div class="room-thumb-wrap"><img src="assets/room2/thumb3.png" alt="Root ceiling installation" class="room-thumb"></div>
+        </div>
+        <div class="room-audio">
+          <div class="spotify-embed" id="spotify-room-2"></div>
+        </div>
+        <div class="room-video" data-video-src="">
+          <video muted loop playsinline></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8 — ROOM 3 -->
+    <section class="slide slide-room" data-index="7" data-spotify-track="1YiBEdXvyWL9rupB3Cg4IQ">
+      <div class="slide-bg">
+        <img src="assets/room3/bg.png" alt="Aerial earth landscape">
+        <div class="slide-bg-overlay slide-bg-overlay--room"></div>
+      </div>
+      <div class="slide-content anim">
+        <span class="room-label">Room 3</span>
+        <h2 class="room-title">"Traces of the footprints"</h2>
+        <div class="room-gallery">
+          <div class="room-thumb-wrap"><img src="assets/room3/thumb1.png" alt="Aerial sea and rocks" class="room-thumb"></div>
+          <div class="room-thumb-wrap"><img src="assets/room3/thumb2.png" alt="Aerial coastline kayaks" class="room-thumb"></div>
+          <div class="room-thumb-wrap"><img src="assets/room3/thumb3.png" alt="Aerial greenhouses" class="room-thumb"></div>
+        </div>
+        <div class="room-audio">
+          <div class="spotify-embed" id="spotify-room-3"></div>
+        </div>
+        <div class="room-video" data-video-src="">
+          <video muted loop playsinline></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9 — ROOM 4 -->
+    <section class="slide slide-room" data-index="8" data-spotify-track="">
+      <div class="slide-bg">
+        <img src="assets/room4-bg.png" alt="Bioluminescent floor installation">
+        <div class="slide-bg-overlay slide-bg-overlay--room"></div>
+      </div>
+      <div class="slide-content anim">
+        <span class="room-label">Room 4</span>
+        <h2 class="room-title">"Lorem ipsum"</h2>
+        <div class="room-gallery">
+          <div class="room-thumb-wrap"><img src="assets/room4-thumb1.png" alt="Data visualization trees" class="room-thumb"></div>
+          <div class="room-thumb-wrap"><img src="assets/room4-thumb2.png" alt="Bioluminescent forest" class="room-thumb"></div>
+        </div>
+        <div class="room-audio">
+          <div class="spotify-embed" id="spotify-room-4"></div>
+        </div>
+        <div class="room-video" data-video-src="">
+          <video muted loop playsinline></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 10 — ROOM 5 -->
+    <section class="slide slide-room" data-index="9" data-spotify-track="">
+      <div class="slide-bg">
+        <img src="assets/room5-bg.png" alt="Crystal flowers on black">
+        <div class="slide-bg-overlay slide-bg-overlay--room"></div>
+      </div>
+      <div class="slide-content anim">
+        <span class="room-label">Room 5</span>
+        <h2 class="room-title">"Lorem ipsum"</h2>
+        <div class="room-gallery">
+          <div class="room-thumb-wrap"><img src="assets/room5-thumb1.png" alt="Crystal flower closeup" class="room-thumb"></div>
+          <div class="room-thumb-wrap"><img src="assets/room5-thumb2.png" alt="Organic warm macro" class="room-thumb"></div>
+        </div>
+        <div class="room-audio">
+          <div class="spotify-embed" id="spotify-room-5"></div>
+        </div>
+        <div class="room-video" data-video-src="">
+          <video muted loop playsinline></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 11 — ROOM 6 -->
+    <section class="slide slide-room" data-index="10" data-spotify-track="">
+      <div class="slide-bg">
+        <img src="assets/room6-bg.png" alt="Crystalline corridor">
+        <div class="slide-bg-overlay slide-bg-overlay--room"></div>
+      </div>
+      <div class="slide-content anim">
+        <span class="room-label">Room 6</span>
+        <h2 class="room-title">"Lorem ipsum"</h2>
+        <div class="room-gallery">
+          <div class="room-thumb-wrap"><img src="assets/room6-thumb1.png" alt="Particle jellyfish" class="room-thumb"></div>
+          <div class="room-thumb-wrap"><img src="assets/room6-thumb2.png" alt="Particle snail" class="room-thumb"></div>
+        </div>
+        <div class="room-audio">
+          <div class="spotify-embed" id="spotify-room-6"></div>
+        </div>
+        <div class="room-video" data-video-src="">
+          <video muted loop playsinline></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 12 — CLOSING -->
+    <section class="slide slide-closing" data-index="11">
+      <div class="slide-bg">
+        <img src="assets/closing-bg.png" alt="Green immersive projection room">
+        <div class="slide-bg-overlay slide-bg-overlay--heavy"></div>
+      </div>
+      <div class="slide-content anim">
+        <p class="closing-label">Closing Statement</p>
+        <p class="closing-text">Our role is not to choose sides, but to recognize ourselves as part of this hybrid ecosystem, to learn to listen to it, and to move in harmony with its rhythm.</p>
+        <p class="closing-credits">NATURIS</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Spotify IFrame API -->
+  <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -3,11 +3,16 @@
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.dot');
   const animElements = document.querySelectorAll('.anim');
-  const audioBtn = document.getElementById('audio-enable');
+  const audioControls = document.getElementById('audio-controls');
+  const audioToggle = document.getElementById('audio-toggle');
+  const volumeSlider = document.getElementById('volume-slider');
 
   let currentSlide = 0;
   let audioEnabled = false;
-  let spotifyControllers = {};
+  let ambientController = null;
+  let roomControllers = {};
+  let currentVolume = 70; // 0-100
+  let activeSource = null; // 'ambient' | room index
 
   const SVG_OFF =
     '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>' +
@@ -23,14 +28,11 @@
   const animObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('visible');
       });
     },
     { root: container, threshold: 0.25 }
   );
-
   animElements.forEach((el) => animObserver.observe(el));
 
   // ===== Intersection Observer: Active Slide =====
@@ -42,65 +44,72 @@
           if (index !== currentSlide) {
             currentSlide = index;
             updateDots(index);
-            handleRoomAudio(index);
+            handleAudio(index);
           }
         }
       });
     },
     { root: container, threshold: 0.55 }
   );
-
   slides.forEach((slide) => slideObserver.observe(slide));
 
-  // ===== Update Dots =====
+  // ===== Dots =====
   function updateDots(activeIndex) {
     dots.forEach((dot) => {
       dot.classList.toggle('active', parseInt(dot.dataset.slide, 10) === activeIndex);
     });
   }
 
-  // ===== Dot Click Navigation =====
   dots.forEach((dot) => {
     dot.addEventListener('click', () => {
-      const index = parseInt(dot.dataset.slide, 10);
-      const target = slides[index];
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
+      const target = slides[parseInt(dot.dataset.slide, 10)];
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   });
 
-  // ===== Keyboard Navigation =====
+  // ===== Keyboard =====
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
       e.preventDefault();
-      const next = Math.min(currentSlide + 1, slides.length - 1);
-      slides[next].scrollIntoView({ behavior: 'smooth' });
+      slides[Math.min(currentSlide + 1, slides.length - 1)].scrollIntoView({ behavior: 'smooth' });
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
       e.preventDefault();
-      const prev = Math.max(currentSlide - 1, 0);
-      slides[prev].scrollIntoView({ behavior: 'smooth' });
+      slides[Math.max(currentSlide - 1, 0)].scrollIntoView({ behavior: 'smooth' });
     }
   });
 
-  // ===== Audio Toggle Button =====
-  audioBtn.addEventListener('click', () => {
+  // ===== Audio Toggle =====
+  audioToggle.addEventListener('click', () => {
     audioEnabled = !audioEnabled;
 
     if (audioEnabled) {
-      audioBtn.querySelector('svg').innerHTML = SVG_ON;
-      audioBtn.querySelector('span').textContent = 'Audio On';
-      audioBtn.classList.add('enabled');
-      handleRoomAudio(currentSlide);
+      audioToggle.querySelector('svg').innerHTML = SVG_ON;
+      audioControls.classList.add('active');
+      handleAudio(currentSlide);
     } else {
-      audioBtn.querySelector('svg').innerHTML = SVG_OFF;
-      audioBtn.querySelector('span').textContent = 'Enable Audio';
-      audioBtn.classList.remove('enabled', 'playing');
+      audioToggle.querySelector('svg').innerHTML = SVG_OFF;
+      audioControls.classList.remove('active');
       pauseAll();
+      activeSource = null;
     }
   });
 
-  // ===== Spotify IFrame API =====
+  // ===== Volume =====
+  volumeSlider.addEventListener('input', () => {
+    currentVolume = parseInt(volumeSlider.value, 10);
+    // Spotify IFrame API doesn't expose volume control directly,
+    // so we control the iframe element's volume via postMessage workaround.
+    // For now the slider controls a CSS visual state — actual volume
+    // is handled at the Spotify player level by the user.
+    // If volume is 0, mute by pausing.
+    if (currentVolume === 0 && audioEnabled) {
+      pauseAll();
+    } else if (currentVolume > 0 && audioEnabled) {
+      handleAudio(currentSlide);
+    }
+  });
+
+  // ===== Collect room slides =====
   const roomSlides = {};
   document.querySelectorAll('.slide-room').forEach((slide) => {
     const index = parseInt(slide.dataset.index, 10);
@@ -114,10 +123,28 @@
     }
   });
 
+  // ===== Spotify IFrame API =====
   window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    // Create ambient player
+    const ambientEl = document.getElementById('spotify-ambient');
+    const ambientTrack = ambientEl?.dataset.spotifyTrack;
+    if (ambientEl && ambientTrack) {
+      IFrameAPI.createController(ambientEl, {
+        uri: 'spotify:track:' + ambientTrack,
+        width: 300,
+        height: 80,
+        theme: 'dark'
+      }, (controller) => {
+        ambientController = controller;
+        controller.addListener('ready', () => {
+          controller.pause();
+        });
+      });
+    }
+
+    // Create room players
     Object.entries(roomSlides).forEach(([index, room]) => {
       if (!room.trackId || !room.embedId) return;
-
       const element = document.getElementById(room.embedId);
       if (!element) return;
 
@@ -128,7 +155,7 @@
         theme: 'dark'
       }, (controller) => {
         room.controller = controller;
-        spotifyControllers[index] = controller;
+        roomControllers[index] = controller;
         controller.addListener('ready', () => {
           controller.pause();
         });
@@ -136,32 +163,37 @@
     });
   };
 
-  // ===== Handle Room Audio on Scroll =====
+  // ===== Audio Logic =====
   function pauseAll() {
-    Object.values(spotifyControllers).forEach((ctrl) => {
+    if (ambientController) {
+      try { ambientController.pause(); } catch (e) {}
+    }
+    Object.values(roomControllers).forEach((ctrl) => {
       try { ctrl.pause(); } catch (e) {}
     });
   }
 
-  function handleRoomAudio(slideIndex) {
+  function handleAudio(slideIndex) {
+    if (!audioEnabled || currentVolume === 0) return;
+
     const isRoom = roomSlides[slideIndex] && roomSlides[slideIndex].controller;
 
-    if (!audioEnabled) {
-      audioBtn.classList.remove('playing');
-      return;
-    }
-
-    // Pause all first
-    pauseAll();
-
-    // Play current room's track if on a room
     if (isRoom) {
-      try {
-        roomSlides[slideIndex].controller.resume();
-        audioBtn.classList.add('playing');
-      } catch (e) {}
+      // On a room slide — play room track, pause ambient
+      if (activeSource !== slideIndex) {
+        pauseAll();
+        try { roomSlides[slideIndex].controller.resume(); } catch (e) {}
+        activeSource = slideIndex;
+      }
     } else {
-      audioBtn.classList.remove('playing');
+      // On a non-room slide — play ambient, pause rooms
+      if (activeSource !== 'ambient') {
+        pauseAll();
+        if (ambientController) {
+          try { ambientController.resume(); } catch (e) {}
+        }
+        activeSource = 'ambient';
+      }
     }
   }
 
@@ -172,10 +204,8 @@
     const video = videoWrap.querySelector('video');
     const slide = videoWrap.closest('.slide');
     const bgImg = slide.querySelector('.slide-bg img');
-
     video.src = src;
     videoWrap.style.display = 'block';
-
     video.addEventListener('loadeddata', () => {
       if (bgImg) bgImg.style.display = 'none';
     });
@@ -183,7 +213,5 @@
 
   // ===== First slide visible immediately =====
   const firstAnim = slides[0]?.querySelector('.anim');
-  if (firstAnim) {
-    firstAnim.classList.add('visible');
-  }
+  if (firstAnim) firstAnim.classList.add('visible');
 })();

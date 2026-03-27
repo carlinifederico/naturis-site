@@ -11,15 +11,22 @@
 </head>
 <body>
 
-  <!-- Audio Enable Prompt -->
-  <button class="audio-enable" id="audio-enable" aria-label="Enable audio">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-      <line x1="23" y1="9" x2="17" y2="15"></line>
-      <line x1="17" y1="9" x2="23" y2="15"></line>
-    </svg>
-    <span>Enable Audio</span>
-  </button>
+  <!-- Audio Controls -->
+  <div class="audio-controls" id="audio-controls">
+    <button class="audio-toggle" id="audio-toggle" aria-label="Toggle audio">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+    </button>
+    <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="70" aria-label="Volume">
+  </div>
+
+  <!-- Hidden ambient player -->
+  <div class="spotify-hidden">
+    <div id="spotify-ambient" data-spotify-track="2pP6DpfFxbOzvlxrpjH09v"></div>
+  </div>
 
   <!-- Navigation Dots -->
   <nav class="dots" aria-label="Section navigation">

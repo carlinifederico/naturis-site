@@ -592,6 +592,60 @@ body {
   background: rgba(74, 158, 158, 0.2);
 }
 
+/* ===== LIGHTBOX ===== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  cursor: zoom-out;
+}
+
+.lightbox.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+  transition: transform 0.4s ease;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  line-height: 1;
+  padding: 0.5rem;
+}
+
+.lightbox-close:hover {
+  opacity: 1;
+}
+
+/* Make gallery thumbs clickable */
+.room-thumb-wrap {
+  cursor: zoom-in;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .slide {

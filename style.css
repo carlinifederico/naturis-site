@@ -419,6 +419,29 @@ body {
   opacity: 0.6;
 }
 
+.room-info-desc {
+  font-size: 0.72rem;
+  font-weight: 300;
+  line-height: 1.6;
+  opacity: 0.78;
+  margin-bottom: 0.7rem;
+}
+
+.room-info-concept {
+  font-size: 0.7rem;
+  font-weight: 300;
+  line-height: 1.55;
+  opacity: 0.6;
+}
+
+.room-info-concept span {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0.85;
+  margin-right: 0.45em;
+  font-weight: 400;
+}
+
 @media (max-width: 768px) {
   .room-info {
     bottom: 1.5rem;
@@ -431,6 +454,9 @@ body {
   .room-info-list li {
     font-size: 0.65rem;
   }
+
+  .room-info-desc { font-size: 0.66rem; }
+  .room-info-concept { font-size: 0.64rem; }
 }
 
 /* Room Video — future video container */

@@ -10,7 +10,7 @@
   // ===== Audio Setup =====
   const FADE_MS = 800;
   let audioEnabled = true; // ON by default
-  let currentVolume = 0.7;
+  let currentVolume = 0.45;
   let currentSlide = 0;
   let activeAudio = null;
   let userInteracted = false;
@@ -28,12 +28,12 @@
   // Map slide indices to audio elements
   const audioAmbient = document.getElementById('audio-ambient');
   const roomAudioMap = {
-    5: document.getElementById('audio-room-1'),
-    6: document.getElementById('audio-room-2'),
-    7: document.getElementById('audio-room-3'),
-    8: document.getElementById('audio-room-4'),
-    9: document.getElementById('audio-room-5'),
-    10: document.getElementById('audio-room-6'),
+    1: document.getElementById('audio-room-2'),
+    2: document.getElementById('audio-room-1'),
+    3: document.getElementById('audio-room-3'),
+    4: document.getElementById('audio-room-4'),
+    5: document.getElementById('audio-room-5'),
+    6: document.getElementById('audio-room-6'),
   };
 
   const allAudios = [audioAmbient, ...Object.values(roomAudioMap)];
@@ -66,10 +66,9 @@
     });
   }
 
-  function fadeIn(audio, targetVol, duration) {
+  function rampVolume(audio, targetVol, duration) {
     if (!audio) return;
     audio.volume = 0;
-    audio.play().catch(() => {});
     const steps = 20;
     const stepTime = duration / steps;
     const volStep = targetVol / steps;
@@ -82,6 +81,12 @@
         audio.volume = targetVol;
       }
     }, stepTime);
+  }
+
+  function fadeIn(audio, targetVol, duration) {
+    if (!audio) return;
+    audio.play().catch(() => {});
+    rampVolume(audio, targetVol, duration);
   }
 
   // ===== Play correct track for slide =====
@@ -110,20 +115,49 @@
     activeAudio = null;
   }
 
-  // ===== Start audio on first user interaction =====
+  // ===== Start audio on first user gesture =====
+  // Browsers only unlock audio playback on a real activation gesture
+  // (pointer/touch/key/click) — scrolling alone does NOT count. So we keep
+  // listening until a play() call actually succeeds instead of giving up on
+  // the first event.
+  const INTERACTION_EVENTS = ['pointerdown', 'touchstart', 'keydown', 'click'];
+
+  function finalizeInteraction() {
+    userInteracted = true;
+    INTERACTION_EVENTS.forEach((evt) =>
+      document.removeEventListener(evt, onFirstInteraction)
+    );
+  }
+
   function onFirstInteraction() {
     if (userInteracted) return;
-    userInteracted = true;
-    if (audioEnabled) {
-      playForSlide(currentSlide);
+    if (!audioEnabled) {
+      finalizeInteraction();
+      return;
     }
-    document.removeEventListener('click', onFirstInteraction);
-    document.removeEventListener('keydown', onFirstInteraction);
-    document.removeEventListener('scroll', onFirstInteraction, true);
+    const targetAudio = roomAudioMap[currentSlide] || audioAmbient;
+    targetAudio.volume = 0;
+    const playPromise = targetAudio.play();
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise
+        .then(() => {
+          activeAudio = targetAudio;
+          rampVolume(targetAudio, currentVolume, FADE_MS);
+          finalizeInteraction();
+        })
+        .catch(() => {
+          // Gesture didn't unlock audio (e.g. wheel scroll) — wait for the next one
+        });
+    } else {
+      activeAudio = targetAudio;
+      rampVolume(targetAudio, currentVolume, FADE_MS);
+      finalizeInteraction();
+    }
   }
-  document.addEventListener('click', onFirstInteraction);
-  document.addEventListener('keydown', onFirstInteraction);
-  document.addEventListener('scroll', onFirstInteraction, true);
+
+  INTERACTION_EVENTS.forEach((evt) =>
+    document.addEventListener(evt, onFirstInteraction)
+  );
 
   // ===== Audio Toggle =====
   audioToggle.addEventListener('click', () => {
